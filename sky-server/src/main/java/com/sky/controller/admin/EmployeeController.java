@@ -84,9 +84,18 @@ public class EmployeeController {
     }
 
     @GetMapping("/page")
+    @ApiOperation(value = "分页查询员工")
     public Result<PageResult> pageQuery(EmployeePageQueryDTO employeePageQueryDTO){
         PageResult pageResult=employeeService.pageQuery(employeePageQueryDTO);
         return Result.success(pageResult);
+    }
+
+    @PostMapping("/status/{status}")
+    @ApiOperation(value = "开启、禁用员工账号")
+    public Result startOrStop(@PathVariable Integer status,Long id){
+        employeeService.startOrStop(status,id);
+
+        return Result.success();
     }
 
 }
