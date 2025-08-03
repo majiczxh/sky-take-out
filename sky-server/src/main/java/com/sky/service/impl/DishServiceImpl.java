@@ -125,4 +125,9 @@ public class DishServiceImpl implements DishService {
         log.info("update done");
 
     }
+
+    @Override
+    public List<Dish> queryByCategoryId(Long categoryId) {
+        return dishMapper.getByCategoryId(categoryId);
+    }
 }
