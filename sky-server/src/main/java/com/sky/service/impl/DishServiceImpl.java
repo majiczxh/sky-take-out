@@ -3,6 +3,7 @@ package com.sky.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
+import com.sky.dto.DishCategoryDTO;
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -129,5 +131,26 @@ public class DishServiceImpl implements DishService {
     @Override
     public List<Dish> queryByCategoryId(Long categoryId) {
         return dishMapper.getByCategoryId(categoryId);
+    }
+
+    /**
+     * 根据分类id查询菜品及其口味
+     * @param categoryId
+     * @return
+     */
+    @Override
+    public List<DishVO> queryWithFlavorsByCategoryId(Long categoryId) {
+        List<DishCategoryDTO> dishList=dishMapper.getDishesWithCategoryInfoByCategoryId(categoryId);
+        List<DishVO> dishVOList=new ArrayList<>();
+        if(dishList!=null&&dishList.size()>0){
+            for(DishCategoryDTO dishCategoryDTO:dishList){
+                DishVO dishVO=new DishVO();
+                BeanUtils.copyProperties(dishCategoryDTO,dishVO);
+                dishVO.setFlavors(dishFlavorMapper.getByDishId(dishCategoryDTO.getId()));
+                dishVOList.add(dishVO);
+            }
+            return dishVOList;
+        }
+        return null;
     }
 }

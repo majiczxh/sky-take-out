@@ -49,4 +49,11 @@
         </where>
         order by a.update_time desc
     </select>
+    <select id="getDishesWithCategoryInfoByCategoryId" resultType="com.sky.dto.DishCategoryDTO">
+        select a.*,b.name category_name
+        from dish as a
+        left join category as b
+        on a.category_id=b.id
+        where a.category_id=#{categoryId} and a.status=1
+    </select>
 </mapper>

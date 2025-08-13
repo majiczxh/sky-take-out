@@ -2,8 +2,10 @@ package com.sky.mapper;
 
 import com.github.pagehelper.Page;
 import com.sky.dto.SetmealPageQueryDTO;
+import com.sky.entity.Setmeal;
 import com.sky.entity.SetmealDish;
 import com.sky.vo.SetMealPageVO;
+import com.sky.vo.SetmealDishVO;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -47,4 +49,19 @@ public interface SetMealDishMapper {
      * @param setmealIds
      */
     void deleteBySetmealIds(List<Long> setmealIds);
+
+    /**
+     * get By CategoryId
+     * @param categoryId
+     * @return
+     */
+    @Select("select * from setmeal where category_id=#{categoryId}")
+    List<Setmeal> getByCategoryId(Long categoryId);
+
+    /**
+     * get Setmeal Dishes By SetmealId
+     * @param id
+     * @return
+     */
+    List<SetmealDishVO> getSetmealDishesBySetmealId(Long id);
 }

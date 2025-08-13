@@ -2,6 +2,7 @@ package com.sky.mapper;
 
 import com.github.pagehelper.Page;
 import com.sky.annotation.AutoFill;
+import com.sky.dto.DishCategoryDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.enumeration.OperationType;
@@ -55,4 +56,11 @@ public interface DishMapper {
      */
     @Select("select * from dish where category_id=#{categoryId} and status=1")
     List<Dish> getByCategoryId(Long categoryId);
+
+    /**
+     * 根据分类id查询菜品(status=1),附加categoryName
+     * @param categoryId
+     * @return
+     */
+    List<DishCategoryDTO> getDishesWithCategoryInfoByCategoryId(Long categoryId);
 }

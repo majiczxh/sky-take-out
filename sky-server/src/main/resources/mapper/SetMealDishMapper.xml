@@ -44,5 +44,10 @@
         </where>
         order by a.update_time desc
     </select>
+    <select id="getSetmealDishesBySetmealId" resultType="com.sky.vo.SetmealDishVO">
+        select sd.copies,d.description,d.image,d.name from setmeal_dish as sd
+            left join dish as d on sd.dish_id=d.id
+        where sd.setmeal_id=#{id}
+    </select>
 
 </mapper>
