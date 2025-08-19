@@ -35,11 +35,24 @@ public class ShoppingCartController {
     }
 
     @GetMapping("/list")
-    @ApiOperation(value = "添加购物车")
+    @ApiOperation(value = "查看购物车")
     public Result<List<ShoppingCart>> list(){
         List<ShoppingCart> list=shoppingCartService.list();
         return Result.success(list);
     }
 
+    @DeleteMapping("/clean")
+    @ApiOperation(value = "清空购物车")
+    public Result clean(){
+       shoppingCartService.clean();
+        return Result.success();
+    }
+
+    @PostMapping("/sub")
+    @ApiOperation(value = "删除购物车")
+    public Result sub(@RequestBody ShoppingCartDTO  shoppingCartDTO){
+        shoppingCartService.sub(shoppingCartDTO);
+        return Result.success();
+    }
 
 }

@@ -5,6 +5,7 @@ import com.sky.dto.ShoppingCartDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.Setmeal;
 import com.sky.entity.ShoppingCart;
+import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.mapper.ShoppingCartMapper;
@@ -76,5 +77,38 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         shoppingCart.setUserId(BaseContext.getCurrentId());
         List<ShoppingCart> shoppingCartList = shoppingCartMapper.list(shoppingCart);
         return shoppingCartList;
+    }
+
+    @Override
+    public void clean() {
+        shoppingCartMapper.deleteByUserId(BaseContext.getCurrentId());
+    }
+
+    @Override
+    public void sub(ShoppingCartDTO shoppingCartDTO) {
+        //先查看shopping_cart表中的数据
+        ShoppingCart shoppingCart = new ShoppingCart();
+        BeanUtils.copyProperties(shoppingCartDTO, shoppingCart);
+        shoppingCart.setUserId(BaseContext.getCurrentId());
+        List<ShoppingCart> shoppingCartList = shoppingCartMapper.list(shoppingCart);
+
+
+        if(shoppingCartList!=null&&shoppingCartList.size()>0){
+            //存在，且数量>1，则数量减1
+            ShoppingCart cart=shoppingCartList.get(0);
+            if(cart.getNumber()>1){
+                cart.setNumber(cart.getNumber()-1);
+                shoppingCartMapper.updateNumberById(cart);
+            } else if (cart.getNumber()==1) {
+                //存在，且数量为1，则删除数据
+                shoppingCartMapper.deleteByUserIdAndDishIdOrSetmealId(shoppingCart);
+            }
+
+        }else{
+            //不存在，抛出异常
+            throw new DeletionNotAllowedException("数据不存在");
+        }
+
+
     }
 }
